@@ -1,0 +1,27 @@
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8005:8000"
+    volumes:
+      - dynamodb-data:/home/dynamo/data
+    environment:
+      - DB_PATH=/home/dynamo/data
+    command: "-jar DynamoDBLocal.jar -sharedDb -port 8000"
+
+  app:
+    build: .
+    container_name: loan-microservice
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dynamodb
+    environment:
+      - AWS_REGION=us-east-2
+      - AWS_ACCESS_KEY_ID=dummy
+      - AWS_SECRET_ACCESS_KEY=dummy
+    command: npm start
+
+volumes:
+  dynamodb-data:
