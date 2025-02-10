@@ -1,13 +1,15 @@
+require('dotenv').config(); // Cargar variables de entorno desde .env
+
 const express = require("express");
 const axios = require("axios");
 const AWS = require("aws-sdk");
 
-// Configurar AWS con credenciales dummy para DynamoDB Local
+// Configurar AWS con credenciales desde .env
 AWS.config.update({
-    region: "us-east-2",
-    endpoint: "http://localhost:8000",
-    accessKeyId: "dummy",         // Credenciales ficticias
-    secretAccessKey: "dummy"
+    region: process.env.AWS_REGION,
+    endpoint: process.env.AWS_ENDPOINT,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
 const app = express();
@@ -52,8 +54,8 @@ dynamoDBService.listTables({}, (err, data) => {
     }
 });
 
-// URL de la Lambda
-const LAMBDA_URL = "https://7drmu03czb.execute-api.us-east-2.amazonaws.com/test/calculateLoan";
+// URL de la Lambda desde .env
+const LAMBDA_URL = process.env.LAMBDA_URL;
 
 // Endpoint para procesar préstamos
 app.post("/processLoan", async (req, res) => {
