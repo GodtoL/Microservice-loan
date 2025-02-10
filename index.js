@@ -5,7 +5,7 @@ const AWS = require("aws-sdk");
 // Configurar AWS con credenciales dummy para DynamoDB Local
 AWS.config.update({
     region: "us-east-2",
-    endpoint: "http://localhost:8005",
+    endpoint: "http://localhost:8000",
     accessKeyId: "dummy",         // Credenciales ficticias
     secretAccessKey: "dummy"
 });
@@ -36,18 +36,18 @@ const createTableParams = {
 // Crear la tabla si no existe
 dynamoDBService.listTables({}, (err, data) => {
     if (err) {
-        console.error("Error listing tables", err);
+        console.error("Error al listar tablas", err);
     } else {
         if (!data.TableNames.includes("LoanRequests")) {
             dynamoDBService.createTable(createTableParams, (err, data) => {
                 if (err) {
-                    console.error("Unable to create table", err);
+                    console.error("No se puede crear la tabla", err);
                 } else {
-                    console.log("Table created", data);
+                    console.log("Tabla creada", data);
                 }
             });
         } else {
-            console.log("Table 'LoanRequests' already exists.");
+            console.log("Tabla 'LoanRequests' ya existe.");
         }
     }
 });
@@ -97,9 +97,9 @@ app.post("/processLoan", async (req, res) => {
 
         res.json(finalData);
     } catch (error) {
-        res.status(500).json({ error: "Error processing loan request", details: error.message });
+        res.status(500).json({ error: "Error al procesar la solicitud de préstamo", details: error.message });
     }
 });
 
 // Iniciar servidor
-app.listen(3000, () => console.log("Microservice running on port 3000"));
+app.listen(3000, () => console.log("Microservicio corriendo en puerto 3000"));
